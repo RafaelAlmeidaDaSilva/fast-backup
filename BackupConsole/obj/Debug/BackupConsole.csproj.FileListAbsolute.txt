@@ -1,0 +1,7 @@
+C:\Users\Orion\Documents\_PESSOAL\BackupConsole\BackupConsole\bin\Debug\BackupConsole.exe.config
+C:\Users\Orion\Documents\GitHub\Pessoal\Projetos\C#\BackupConsole\BackupConsole\bin\Debug\BackupConsole.exe.config
+C:\Users\Orion\Documents\GitHub\Pessoal\Projetos\C#\BackupConsole\BackupConsole\bin\Debug\BackupConsole.exe
+C:\Users\Orion\Documents\GitHub\Pessoal\Projetos\C#\BackupConsole\BackupConsole\bin\Debug\BackupConsole.pdb
+C:\Users\Orion\Documents\GitHub\Pessoal\Projetos\C#\BackupConsole\BackupConsole\obj\Debug\BackupConsole.csprojResolveAssemblyReference.cache
+C:\Users\Orion\Documents\GitHub\Pessoal\Projetos\C#\BackupConsole\BackupConsole\obj\Debug\BackupConsole.exe
+C:\Users\Orion\Documents\GitHub\Pessoal\Projetos\C#\BackupConsole\BackupConsole\obj\Debug\BackupConsole.pdb
