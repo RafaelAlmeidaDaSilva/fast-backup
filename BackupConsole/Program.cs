@@ -54,8 +54,6 @@ namespace FastBackupConsole
         public Arquivos recursividades(DirectoryInfo diretorioInfoAtual, Arquivos arquivos)
         {
 
-            try
-            {
                 System.IO.FileInfo[] arquivosDirAtual = diretorioInfoAtual.GetFiles();
 
                 if (arquivosDirAtual != null)
@@ -70,24 +68,13 @@ namespace FastBackupConsole
                     foreach (System.IO.DirectoryInfo dirInfo in diretorioInfoAtual.GetDirectories())
                         recursividades(dirInfo, arquivos);
                 }
-            }
+            
 
-            catch (UnauthorizedAccessException e)
-            {
-                Console.WriteLine(e.Message);
-            }
-
-            catch (System.IO.DirectoryNotFoundException e)
-            {
-                Console.WriteLine(e.Message);
-            }
             return arquivos;
         }
 
         public Diretorios recursividades(DirectoryInfo diretorioInfoAtual, Diretorios diretoriosEncontrados)
         {
-            try
-            {
                 foreach (System.IO.DirectoryInfo dirInfo in diretorioInfoAtual.GetDirectories())
                 {
                     Diretorio diretorio = new Diretorio();
@@ -95,19 +82,10 @@ namespace FastBackupConsole
                     diretoriosEncontrados.Add(diretorio);
                     recursividades(dirInfo, diretoriosEncontrados);
                 }
-            }
-            catch (DirectoryNotFoundException e)
-            {
-
-                Console.WriteLine(e.Message);
-            }
-            
-                
+                   
             return diretoriosEncontrados;
         }
     }
-
-
 
     public class BackupAnalise : Analise
     {
@@ -173,47 +151,56 @@ namespace FastBackupConsole
 
     public class Sincronize
     {
-        Backup SincronizeBackup;
+        Diretorios RepositoriosSincronizaveis;
+
     }
 
-    public class SincronizeAnalise : Analise
-    {
-        
-    }   
+
+
+   
 
     class Program
     {
 
         static void Main(string[] args)
         {
-            String dirArquivosTrabalhados = @"E:\Teste\";
-            String dirRepositorioBackup = @"E:\Samba\";
+            String dirArquivosTrabalhados = @"/media/rafaelalmeidadasilva/Arquivos/Teste";
+            String dirRepositorioBackup = @"/media/rafaelalmeidadasilva/Arquivos/Samba";
 
             Backup backup = new Backup();
 
             Diretorio diretorio = new Diretorio();
-            
-            diretorio.diretorioInfoAtual = new DirectoryInfo(dirArquivosTrabalhados);
-            backup.arquivosDeTransferencia = convertToArquivos(diretorio.diretorioInfoAtual.GetFiles(), new Arquivos());
+        
+            try{
+                    diretorio.diretorioInfoAtual = new DirectoryInfo(dirArquivosTrabalhados);
+                    backup.arquivosDeTransferencia = convertToArquivos(diretorio.diretorioInfoAtual.GetFiles(), new Arquivos());
 
-            diretorio.diretorioInfoAtual = new DirectoryInfo(dirRepositorioBackup);
-            backup.repositoriosBackup = new Diretorios();
-            backup.repositoriosBackup.Add(diretorio); 
+                    diretorio.diretorioInfoAtual = new DirectoryInfo(dirRepositorioBackup);
+                    backup.repositoriosBackup = new Diretorios();
+                    backup.repositoriosBackup.Add(diretorio); 
 
+                    FileInfo[] arquivosDoDiretorioTrabalhado = (new DirectoryInfo(dirArquivosTrabalhados)).GetFiles();
 
-            FileInfo[] arquivosDoDiretorioTrabalhado = (new DirectoryInfo(dirArquivosTrabalhados)).GetFiles();
+                    Console.ForegroundColor = ConsoleColor.Cyan;
 
-            Console.ForegroundColor = ConsoleColor.Cyan;
+                    Program.listandoArray("Arquivos trabalhados do diretorio atual", arquivosDoDiretorioTrabalhado);
 
-            Program.listandoArray("arquivos trabalhados do diretorio atual", arquivosDoDiretorioTrabalhado);
+                    BackupAnalise backupAnalise = new BackupAnalise(new ArquivosTransferiveis());
+                    backupAnalise.validaBackup(backup);
 
-            BackupAnalise backupAnalise = new BackupAnalise(new ArquivosTransferiveis());
-            backupAnalise.validaBackup(backup);
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Program.listandoList("Arquivos Transferíveis ", backupAnalise.arquivosTransferencia.arquivosModificados);
 
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Program.listandoList("Arquivos Modificados ", backupAnalise.arquivosTransferencia.arquivosModificados);
-  
-            Console.ReadKey();
+            }catch (System.IO.DirectoryNotFoundException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            Console.ReadLine();
         }
 
         public static void listandoArray(String titulo, FileInfo[] arquivos)
@@ -232,8 +219,9 @@ namespace FastBackupConsole
             {
                 Console.WriteLine("\n[{0}] ", titulo);
                 foreach (Arquivo arquivo in arquivos)
-                {
-                    Console.WriteLine(arquivo.arquivoInfo.FullName);
+                {   
+                    Console.WriteLine("Arquivo:{0} \n Data de Modificacão: {1} \n Data de Criação: {2} ", arquivo.arquivoInfo.FullName, 
+                    arquivo.arquivoInfo.LastWriteTime.ToString(), arquivo.arquivoInfo.CreationTime.ToString());
                 }
             }
         }
@@ -253,4 +241,5 @@ namespace FastBackupConsole
         }
     }
 }
+
 
