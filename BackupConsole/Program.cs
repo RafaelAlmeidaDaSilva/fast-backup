@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Collections.Generic;
 
 
 namespace FastBackupConsole
 {
-    public class Arquivo
+    public class Arquivo 
     {
         public enum Status
         {
@@ -17,7 +17,26 @@ namespace FastBackupConsole
 
     public class Diretorio
     {
-        public DirectoryInfo diretorioInfoAtual;
+        public DirectoryInfo diretorioInfoAtual{get; set;}
+
+        public enum Status
+        {
+             Espera, Avaliado
+        }
+
+        public Diretorio(String diretorio)
+        {   
+            diretorioInfoAtual = new DirectoryInfo(diretorio);
+
+        }
+
+        
+        public Diretorio()
+        {   
+            
+
+        }
+            
             
     }
 
@@ -49,7 +68,25 @@ namespace FastBackupConsole
 
     }
 
-    public class Analise
+    public class Convert
+    {
+        public Arquivos convertToArquivos(FileInfo[] files, Arquivos arquivos)
+        {
+            foreach (FileInfo file in files)
+                arquivos.Add(convertToArquivo(file, new Arquivo()));
+            
+            return arquivos;
+        }
+
+        public Arquivo convertToArquivo(FileInfo file, Arquivo arquivo)
+        {
+            arquivo.arquivoInfo = file;
+            return arquivo;
+        }
+    }       
+
+    // Implentar classe Convert como interface
+    public class Analise:Convert
     {
         public Arquivos recursividades(DirectoryInfo diretorioInfoAtual, Arquivos arquivos)
         {
@@ -58,17 +95,13 @@ namespace FastBackupConsole
 
                 if (arquivosDirAtual != null)
                 {
-                    foreach (System.IO.FileInfo arq in arquivosDirAtual)
-                    {
-                        Arquivo arquivo = new Arquivo();
-                        arquivo.arquivoInfo = arq;
-                        arquivos.Add(arquivo);
-                    }
+
+                    arquivos = convertToArquivos(arquivosDirAtual, arquivos);
+                    
 
                     foreach (System.IO.DirectoryInfo dirInfo in diretorioInfoAtual.GetDirectories())
                         recursividades(dirInfo, arquivos);
                 }
-            
 
             return arquivos;
         }
@@ -151,45 +184,88 @@ namespace FastBackupConsole
 
     public class Sincronize
     {
-        Diretorios RepositoriosSincronizaveis;
+        Diretorios RepositoriosSincronizaveis{get; set;}
+        public Sincronize ()
+        {
+            RepositoriosSincronizaveis = new Diretorios();
+
+            // Haverá um erro se o diretorio for igual ao outro.
+            Diretorio dir = new Diretorio(@"/media/rafaelalmeidadasilva/Arquivos/Teste");
+            RepositoriosSincronizaveis.Add(dir);
+
+            Diretorio dir2 = new Diretorio(@"/media/rafaelalmeidadasilva/Arquivos/Samba");
+            RepositoriosSincronizaveis.Add(dir2);      
+
+        }
+
+        public void CompareTodosComTodos()
+        {
+             // regra ao adicionar
+            
+            foreach (Diretorio diretorioAvaliado in RepositoriosSincronizaveis)
+            {
+               Diretorios repositoriosComparados = new Diretorios();
+               
+               foreach (var diretorioComparacao in RepositoriosSincronizaveis)
+               {
+                    if(!diretorioComparacao.diretorioInfoAtual.Equals(diretorioAvaliado.diretorioInfoAtual))
+                        repositoriosComparados.Add(diretorioComparacao);
+
+               }
+
+                BackupAnalise backupAnalise = new BackupAnalise(new ArquivosTransferiveis());                                
+                
+                // separar responsabilidades depois 
+                // backupAnalise.validaBackup();    
+                // Backup backup = new Backup();
+                // backup.arquivosDeTransferencia = ;
+                // backup.repositoriosBackup = repositoriosComparados; 
+                // backupAnalise.validaBackup();
+                
+            }
+
+        }
 
     }
 
+    class SincronizeAnalise
+    {
 
-
-   
+        
+    }
 
     class Program
     {
-
         static void Main(string[] args)
         {
-            String dirArquivosTrabalhados = @"/media/rafaelalmeidadasilva/Arquivos/Teste";
-            String dirRepositorioBackup = @"/media/rafaelalmeidadasilva/Arquivos/Samba";
+            // String dirArquivosTrabalhados = @"/media/rafaelalmeidadasilva/Arquivos/Teste";
+            // String dirRepositorioBackup = @"/media/rafaelalmeidadasilva/Arquivos/Samba";
 
-            Backup backup = new Backup();
+            // Backup backup = new Backup();
 
-            Diretorio diretorio = new Diretorio();
+            // Diretorio diretorio = new Diretorio();
         
             try{
-                    diretorio.diretorioInfoAtual = new DirectoryInfo(dirArquivosTrabalhados);
-                    backup.arquivosDeTransferencia = convertToArquivos(diretorio.diretorioInfoAtual.GetFiles(), new Arquivos());
+                    // diretorio.diretorioInfoAtual = new DirectoryInfo(dirArquivosTrabalhados);
+                    // backup.arquivosDeTransferencia = convertToArquivos(diretorio.diretorioInfoAtual.GetFiles(), new Arquivos());
 
-                    diretorio.diretorioInfoAtual = new DirectoryInfo(dirRepositorioBackup);
-                    backup.repositoriosBackup = new Diretorios();
-                    backup.repositoriosBackup.Add(diretorio); 
+                    // diretorio.diretorioInfoAtual = new DirectoryInfo(dirRepositorioBackup);
+                    // backup.repositoriosBackup = new Diretorios();
+                    // backup.repositoriosBackup.Add(diretorio); 
 
-                    FileInfo[] arquivosDoDiretorioTrabalhado = (new DirectoryInfo(dirArquivosTrabalhados)).GetFiles();
+                    // FileInfo[] arquivosDoDiretorioTrabalhado = (new DirectoryInfo(dirArquivosTrabalhados)).GetFiles();
 
-                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    // Console.ForegroundColor = ConsoleColor.Cyan;
 
-                    Program.listandoArray("Arquivos trabalhados do diretorio atual", arquivosDoDiretorioTrabalhado);
+                    // Program.listandoArray("Arquivos trabalhados do diretorio atual", arquivosDoDiretorioTrabalhado);
 
-                    BackupAnalise backupAnalise = new BackupAnalise(new ArquivosTransferiveis());
-                    backupAnalise.validaBackup(backup);
+                    // BackupAnalise backupAnalise = new BackupAnalise(new ArquivosTransferiveis());
+                    // backupAnalise.validaBackup(backup);
 
-                    Console.ForegroundColor = ConsoleColor.Blue;
-                    Program.listandoList("Arquivos Transferíveis ", backupAnalise.arquivosTransferencia.arquivosModificados);
+                    // Console.ForegroundColor = ConsoleColor.Blue;
+                    // Program.listandoList("Arquivos Transferíveis ", backupAnalise.arquivosTransferencia.arquivosModificados);
+
+                    // Sincronize sync = new Sincronize();
 
             }catch (System.IO.DirectoryNotFoundException e)
             {
@@ -226,20 +302,9 @@ namespace FastBackupConsole
             }
         }
 
-        public static Arquivos convertToArquivos(FileInfo[] files, Arquivos arquivos)
-        {
-            foreach (FileInfo file in files)
-                arquivos.Add(convertToArquivo(file, new Arquivo()));
-            
-            return arquivos;
-        }
-
-        public static Arquivo convertToArquivo(FileInfo file, Arquivo arquivo)
-        {
-            arquivo.arquivoInfo = file;
-            return arquivo;
-        }
+        
     }
 }
+
 
 
