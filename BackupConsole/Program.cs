@@ -201,32 +201,39 @@ namespace FastBackupConsole
         public void CompareTodosComTodos()
         {
              // regra ao adicionar
-            
+            CollectionBackup collectioBackup = new CollectionBackup();
+
             foreach (Diretorio diretorioAvaliado in RepositoriosSincronizaveis)
             {
+                
                Diretorios repositoriosComparados = new Diretorios();
                
                foreach (var diretorioComparacao in RepositoriosSincronizaveis)
                {
                     if(!diretorioComparacao.diretorioInfoAtual.Equals(diretorioAvaliado.diretorioInfoAtual))
-                        repositoriosComparados.Add(diretorioComparacao);
-
+                       repositoriosComparados.Add(diretorioComparacao);     
+                        
+                    
+                        
                }
 
-                BackupAnalise backupAnalise = new BackupAnalise(new ArquivosTransferiveis());                                
+                Analise analise = new Analise();                                
+                //separar responsabilidades depois 
                 
-                // separar responsabilidades depois 
-                // backupAnalise.validaBackup();    
-                // Backup backup = new Backup();
-                // backup.arquivosDeTransferencia = ;
-                // backup.repositoriosBackup = repositoriosComparados; 
-                // backupAnalise.validaBackup();
+                Backup backup = new Backup();
+                backup.arquivosDeTransferencia = analise.convertToArquivos(diretorioAvaliado.diretorioInfoAtual.GetFiles(), new Arquivos());
+                backup.repositoriosBackup = repositoriosComparados;
+                
+                collectioBackup.Add(backup);
                 
             }
 
+            BackupAnalise backupAnalise = new BackupAnalise(new ArquivosTransferiveis());
+            backupAnalise.validaBackup(collectioBackup);   
+
         }
 
-    }
+     }
 
     class SincronizeAnalise
     {
@@ -305,6 +312,3 @@ namespace FastBackupConsole
         
     }
 }
-
-
-
