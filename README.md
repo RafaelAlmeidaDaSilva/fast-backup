@@ -2,6 +2,88 @@ README
 
 Apenas projetos feitos em C#.
 
+Existem 2 formas de projetos relacionados a backup
+
+	Vamos para formas de backup, uma delas e a mais simples que se descreve por qual a organização de pasta os  arquivos terão. A outra forma é a de como será feito o backup, que por sua vez muito tem haver com o outro.
+	
+História da Ideia
+
+	Mas de inicio, tudo começou quando tive a necessidade de  guardar e deixar simples e organizado e as separações de pasta, apesar de ser perfeccionista chegou um momento que tive a necessidade de tornar a organização um pouco mais simples. 
+	
+	Perfeccionismo  
+	 muitos arquivos	 Bom
+	Poucos arquivos 	Ruim
+	
+	Simples
+	Muitos arquivos 	 Ruim
+	Poucos arquivos 	Bom
+	
+	Qual é o meio termo ? 
+	Da para automatizar utilizando um padrão, que priorize esses dois aspectos ?
+	
+	Tempos antes tinha curiosidade de entender um algoritmo uma vez criado por um amigo. Esse código era responsável por entrar todas as pastas dentro de um diretório. 
+	
+	Esse algoritmo utiliza de um método chamado recursividade. Então peguei um algoritmo similar criado pela Microsoft e apliquei dentro do sistema de backup.
+	
+	 Onde ele entraria em todas as pastas de um determinado diretório e mapearia todos os arquivos e faria uma comparação com um outro determinado diretório. E vice-versa.
+	
+	Nesse novo sistema eu resolvi utilizar o conceito do sistema de versionamento de arquivo, esse algoritmo leva em consideração o ultimo arquivo modificado. Então chamei isso de sincronização e utilizei isso como critério para a sincronização entre os arquivos já existentes.
+	
+	Existe dois tipos de sincronização, as entre em pastas e as entre arquivos.
+	
+	Sinc. Arquivos
+	Critérios:	Comparação do ultimo arquivo modificado.
+		Comparação de novos arquivos entre os dois diretórios.
+		Critério de Usuário 
+	
+	Sinc. Diretórios
+	Critérios: 	  Critério de usuário 
+		  Critério de sequência de busca 
+	
+	
+	A sincronização tecnicamente é um objeto de status que valida se o arquivo ou o diretório esta sincronizado.
+
+	onde uma sincronização seria um objeto onde guardaria apenas os dois diretórios relacionados, que por sua vezes poderia estar ligado a diversos outros backup.
+		
+	Como eu tinha a necessidade de desenvolver algo novo decidi adicionar isso a dispositivos removíveis. Ou seja, seria um sistema portável, dentro do pendrive. 
+	
+	
+Projeto
+	Padrões 
+		- Command (adaptação)
+		- Facade
+		- ViewHelper
+		- Strategy
+		
+	
+	UML Arquitetura Modelo
+
+	
+	UML Domain
+		 
+		
+		
+		Dados do Backup:
+			Diretorio atual
+			Diretorio destino
+			FileInfo
+		
+		Dados do sincronizeFile
+			Diretorio atual
+			Diretorio destino
+			
+		Dados do sincronizeDirector 
+			Diretorio atual
+			Diretorio destino
+			
+			
+			
+			
+			
+		Quais dados são importantes serem registrados?
+![image](https://user-images.githubusercontent.com/20491286/126683833-d9456302-dbb7-4e42-8ad4-bf4c7428345c.png)
+
+
 - FastBackup
 
 	Funcionamento:	
